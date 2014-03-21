@@ -33,3 +33,5 @@ if($){
         },
     });
 }
+
+function ifNull(item, value){if(item===undefined || item===null) return value; return item;} //ideally there should be an ?= operator in EMCAScript
