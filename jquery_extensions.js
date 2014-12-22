@@ -1,7 +1,7 @@
 (function($){
     $.fn.setCheck = function(bool){$(this).prop('checked', bool);};
-    $.fm.check = function(){$(this).setCheck(true);};
-    $.fm.uncheck = function(){$(this).setCheck(false);};
+    $.fn.check = function(){$(this).setCheck(true);};
+    $.fn.uncheck = function(){$(this).setCheck(false);};
     $.fn.toggleCheck = function(){$(this).setCheck(!$(this).is(':checked'));};
     $.fn.reverse = [].reverse;
     //http://www.west-wind.com/WestwindWebToolkit/samples/Ajax/html5andCss3/keycodechecker.aspx
