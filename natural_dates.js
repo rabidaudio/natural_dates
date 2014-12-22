@@ -35,7 +35,7 @@ Date = (function(module){
 
     //HELPERS
     module.number_endings = function(n){
-        if(n>10 && n<14) return n+"t"; //special case 11th - 13th
+        if(n>10 && n<14) return n+"th"; //special case 11th - 13th
         switch(n%10){
             case 1:  return n+"st"; break;
             case 2:  return n+"nd"; break;
