@@ -10,16 +10,12 @@ Date = (function(D){
 
     var module = D.prototype;
 
+    var ONE_MIN = 1000*60;
+    var ONE_HOUR = ONE_MIN*60;
+    var ONE_DAY = ONE_HOUR*24;
+
     module.getNaturalTime = function(opts){
-        var d = this;
-        var round;
-        if(opts && opts.roundTime){
-            round = opts.roundTime % 60;
-        }else{
-            round = (D.natural.roundTime || 0) % 60;
-        }
-        if(round > 0)
-            d.setMinutes(Math.round(d.getMinutes()/round)*round);
+        var d = round_time(this, opts);
         var hours = d.getHours();
         var minutes = d.getMinutes();
 
@@ -56,75 +52,96 @@ Date = (function(D){
 
     module.getNaturalDate = function(opts){
         var d = this;
-        var refDate;
-        if(opts && opts.referenceDate)
-            refDate = opts.referenceDate;
+        var refDate = getReferenceDate(opts);
+        var past = ((d-refDate) < 0);
 
-        if(within_days(d, -1, -1, refDate))
-            return "Yesterday";
-        if(within_days(d,0,0, refDate))
+        if(within_days(d, 0, refDate))
             return "Today";
-        if(within_days(d,1,1, refDate))
-            return "Tomorrow";
+        if(within_days(d, 1, refDate))
+            return (past ? "Yesterday" : "Tomorrow");
 
-        if(within_days(d,-7,0, refDate))
-            return "Last "+day_to_string(d.getDay());
-        if(within_days(d,0,7, refDate))
-            return "This "+day_to_string(d.getDay());
-        if(within_days(d,7,14, refDate))
+        if(within_days(d, 7, refDate))
+            return ( past ? "Last" : "This")+" "+day_to_string(d.getDay());
+        if(within_days(d, 14, refDate) && !past)
             return "Next "+day_to_string(d.getDay())+" the "+number_endings(d.getDate());
 
         var month = month_to_string(d.getMonth());
         var day = number_endings(d.getDate());
         var result = [month, day];
-        if(!within_days(d, -365/2, 365/2))
+        if(!within_days(d, 365, refDate))
             result.push(d.getFullYear());
         return result.join(" ");
     };
 
     module.toNaturalString = function(opts){
         var d = this;
-        var refDate;
-        if(opts && opts.referenceDate)
-            refDate = opts.referenceDate;
+        var refDate = getReferenceDate(opts);
+        var past = ((d-refDate) < 0);
+        var diff_min = Math.abs(Math.ceil((d - refDate)/ONE_MIN));
+        var diff_hours = Math.abs(Math.ceil((d - refDate)/ONE_HOUR));
+        var diff_days = Math.abs(Math.ceil((d - refDate)/ONE_DAY));
 
-        if(!within_days(d,0,0, refDate))
-            return this.getNaturalDate(opts) + " at " + this.getNaturalTime(opts);
-        
+        var suffix = " " + (past ? "ago" : "from now");
+
+        if(diff_min < 1)    //now
+            return "now";
+        if(diff_min < 5)    //5 minutes
+            return pluralize(diff_min, "minute") + suffix;
+        if(diff_min < 60)   //55 minutes
+            return pluralize(Math.round(diff_min/5)*5, "minute") + suffix;
+        if(diff_days < 1)   //23 hours
+            return pluralize(diff_hours, "hour") + suffix;
+        if(diff_days < 14)  //13 days
+            return pluralize(diff_days, "day") + suffix;
+        if(diff_days < 6*7) //5 weeks
+            return pluralize(Math.round(diff_days/7), "week") + suffix;
+        if(diff_days < 365) //11 months
+            return pluralize(Math.round(diff_days/(365/12)), "month") + suffix;
+        return pluralize(Math.round(diff_days/365), "year") + suffix; //12 years
+    };
+
+    module.toRelativeString = function(opts){
+        return this.getNaturalDate(opts)+" at "+this.getNaturalTime(opts);
     };
 
 
-
     //HELPERS
-    function minutes_diff(diff){
-        if(diff>=0 && diff<15)              return diff+plural(" minute", diff)+" from now";
-        else if(diff>=15  && diff < 55)     return Math.round(diff/5)*5 + plural(" minute", diff)+" from now";
-        else if(diff>=55  && diff<12*60)    return Math.round(diff/60)+plural(" hour", diff)+" from now";
-        else if(diff<=0   && diff>-15)      return -1*diff+plural(" minute", diff)+" ago";
-        else if(diff<=-15 && diff > -55)    return -1*Math.round(diff/5)*5 +plural(" hour", diff)+" ago";
-        else if(diff<=-55 && diff>-12*60)   return -1*Math.round(diff/60)+plural(" minute", diff)+" ago";
-        else                                return "Today at "+d.pretty_time();
-    }
 
     var pluralize = function(num, word){
         return num + " " +word+(num==1 ? "" : "s");
     }
 
-    var within_days = function(d, start, finish, refDate){
-        var today = refDate || Date.natural.referenceDate || new Date();
-        var one_day = 1000*60*60*24;
-        var diff = Math.ceil((d.getTime() - today.getTime())/one_day);
-        return (diff >= start && diff <= finish);
+    var round_time = function(date, opts){
+        var round;
+        var d = date;
+        if(opts && opts.roundTime){
+            round = opts.roundTime % 60;
+        }else{
+            round = (D.natural.roundTime || 0) % 60;
+        }
+        if(round > 0)
+            d.setMinutes(Math.round(d.getMinutes()/round)*round);
+        return d;
     }
-    var within_minutes = function(d, start, finish, refDate){
-        var today = refDate || Date.natural.referenceDate || new Date();
+    var getReferenceDate = function(opts){
+        if(opts && opts.referenceDate)
+            return opts.referenceDate;
+        return D.natural.referenceDate || new Date();
+    }
+
+    var within_days = function(d, n, refDate){
+        var one_day = 1000*60*60*24;
+        var diff = Math.abs(Math.ceil((d.getTime() - refDate.getTime())/one_day));
+        return (diff <= n);
+    }
+    var within_minutes = function(d, n, refDate){
         var one_min = 1000*60;
-        var diff = Math.ceil((d - today)/one_min);
-        return (diff >= start && diff <= finish);
+        var diff = Math.abs(Math.ceil((d - refDate)/one_min));
+        return (diff <= n);
     }
 
     var number_endings = function(n){
-        if(n>10 && n<14) return n+"th"; //special case 11th - 13th
+        if((n%100)>10 && (n%100)<14) return n+"th"; //special case 11th - 13th
         switch(n%10){
             case 1:  return n+"st";
             case 2:  return n+"nd";
