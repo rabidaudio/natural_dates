@@ -1,7 +1,7 @@
 {
   "name": "natural_dates",
-  "version": "0.1.0",
-  "description": "Lightweight natural date/time monkeypatch for Javascript",
+  "version": "0.1.1",
+  "description": "Tiny natural language date library for the browser",
   "main": "natural_dates.min.js",
   "directories": {
     "test": "test"
@@ -31,9 +31,9 @@
     "harness": "mocha-bdd",
     "files": "test/test.js",
     "browsers": [
-      "ie/8..latest",
+      "ie/9..latest",
       "chrome/latest",
-      "firefox/12..latest",
+      "firefox/latest",
       "safari/latest",
       "iphone/6",
       "android-browser/latest"
