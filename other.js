@@ -31,7 +31,7 @@ if($){
             var cb = (typeof callback == 'function') ? callback : new Function(callback);
             this.keypress(function(e){ if( e.keyCode == key ) setTimeout(cb,0,e); });
         },
-    });
+    }); 
 }
 
 function ifNull(item, value){if(item===undefined || item===null) return value; return item;} //ideally there should be an ?= operator in EMCAScript
