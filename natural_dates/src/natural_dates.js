@@ -26,38 +26,22 @@ Date = (function(D){
         var ampm = (hours >= 12 ? "pm" : "am");
 
         var day_minutes = hours*60+minutes;
-        if(day_minutes >= (11.5*60) && day_minutes <= (12.5*60)){
-            //noon
+
+        var noon = (day_minutes >= (11.5*60) && day_minutes <= (12.5*60));
+        var midnight = (day_minutes >= (23.5*60) || day_minutes <= (1.5*60));
+
+        if(noon || midnight){
             var result = [];
             if(minutes != 0){
-                if(hours==12){
-                    result.push(minutes);
-                    result.push(plural("minute",minutes));
-                    result.push("after");
+                if(minutes>30){
+                    result.push(pluralize(60-minutes, "minute"));
+                    result.push(noon ? "before" : "to");
                 }else{
-                    result.push(60-minutes);
-                    result.push(plural("minute",60-minutes));
-                    result.push("before");
+                    result.push(pluralize(minutes, "minute"));
+                    result.push(noon ? "after" : "past");
                 }
             }
-            result.push("noon");
-            return result.join(" ");
-        }
-        if(day_minutes >= (23.5*60) || day_minutes <= (1.5*60)){
-            //midnight
-            var result = [];
-            if(minutes != 0){
-                if(hours==0){
-                    result.push(minutes);
-                    result.push(plural("minute",minutes));
-                    result.push("past");
-                }else{
-                    result.push(60-minutes);
-                    result.push(plural("minute",60-minutes));
-                    result.push("to");
-                }
-            }
-            result.push("midnight");
+            result.push(noon ? "noon" : "midnight");
             return result.join(" ");
         }
 
@@ -71,30 +55,6 @@ Date = (function(D){
             minutes="0"+minutes;
 
         return hours+":"+minutes+" "+ampm;
-
-        // if(hours== 0 && minutes == 0){
-
-        // }
-
-        // if(hours == 0 && minutes<30){
-
-        // } (hours == 23 && minutes > 30)){
-        // }
-
-        // if( hours == 0 ){
-        //     hours = 12;
-        // }else if(hours == 12){
-        //     ampm="pm";
-        // }else if(hours>12){
-        //     hours = hours % 12;
-        //     ampm = "pm";
-        // }
-        // if( hours==12 && minutes==0 ) return (ampm=="am" ? "midnight" : "noon");
-
-        // // if(opts.round){
-        // //     date.setMinutes( Math.round(date.getMinutes()/60*2)*30 ); //round to half-hours
-        // // }
-        // return hours+( minutes != 0 ? ":"+(minutes<10?"0":"")+minutes : "" )+" "+ampm;
     }
 
     module.getNaturalDate = function(opts){
@@ -149,8 +109,8 @@ Date = (function(D){
         else                                return "Today at "+d.pretty_time();
     }
 
-    var plural = function(word, num){
-        return word+(num==1 ? "" : "s");
+    var pluralize = function(num, word){
+        return num + " " +word+(num==1 ? "" : "s");
     }
 
     var within_days = function(d, start, finish, refDate){

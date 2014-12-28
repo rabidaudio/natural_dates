@@ -66,15 +66,6 @@ describe('Date', function(){
     });
   });
 
-  // describe('boolean checks', function(){
-  //   it('should know this week', function(){
-  //       new Date(2015, 0, 3).thisWeek.should.be.true;
-  //       new Date(2014, 11, 29).thisWeek.should.be.true;
-  //       new Date(2015, 0, 3).thisWeek.should.be.true;
-  //       new Date(2014, 11, 29).thisWeek.should.be.true;
-  //   })
-  // });
-
   describe('#naturalTime()', function(){
     describe('exact times', function(){
       it('should handle am', function(){
