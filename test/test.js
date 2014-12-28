@@ -5,7 +5,7 @@ var should = chai.should();
 require('../src/natural_dates');
 
 var REF_DATE = new Date('2015-01-01T06:30:00.000Z'); //a Thursday at 1:30 am EST
-Date.natural.referenceDate = REF_DATE;
+Date.natural.referenceDate = REF_DATE; //change reference date for consistant testing
 
 describe('Date', function(){
 
@@ -18,7 +18,6 @@ describe('Date', function(){
       new Date().should.have.property('getNaturalDate');
       new Date().getNaturalDate.should.be.a.Function;
     });
-
     it('should get Yesterday', function(){
       var yesterday = new Date(2014, 11, 31);
       yesterday.getNaturalDate().should.eql("Yesterday");
@@ -159,12 +158,12 @@ describe('Date', function(){
 
     describe("past", function(){
       it("should handle short times", function(){
-        var short = new Date(2015, 0, 1, 1, 28, 55);
-        short.toRelativeString().should.eql("1 minute ago");
+        var shortt = new Date(2015, 0, 1, 1, 28, 55);
+        shortt.toRelativeString().should.eql("1 minute ago");
       });
       it("should handle longer times", function(){
-        var long = new Date(2015, 0, 1, 1, 2);
-        long.toRelativeString().should.eql("30 minutes ago");
+        var longt = new Date(2015, 0, 1, 1, 2);
+        longt.toRelativeString().should.eql("30 minutes ago");
       });
       it('should handle hours', function(){
         var hours = new Date(2014, 11, 31, 13, 0);
@@ -190,12 +189,12 @@ describe('Date', function(){
 
     describe("future", function(){
       it("should handle short times", function(){
-        var short = new Date(2015, 0, 1, 1, 31, 01);
-        short.toRelativeString().should.eql("1 minute from now");
+        var shortt = new Date(2015, 0, 1, 1, 31, 01);
+        shortt.toRelativeString().should.eql("1 minute from now");
       });
       it("should handle longer times", function(){
-        var long = new Date(2015, 0, 1, 2, 02);
-        long.toRelativeString().should.eql("30 minutes from now");
+        var longt = new Date(2015, 0, 1, 2, 02);
+        longt.toRelativeString().should.eql("30 minutes from now");
       });
       it('should handle hours', function(){
         var hours = new Date(2015, 0, 1, 13, 15);
