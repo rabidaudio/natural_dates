@@ -129,7 +129,7 @@
     var round_time = function(date, opts){
         var round;
         var d = date;
-        if(opts && opts.roundTime != undefined){
+        if(opts && opts.roundTime !== undefined && opts.roundTime !== null){
             round = opts.roundTime % 30;
         }else if(D.natural.roundTime){
             round = D.natural.roundTime % 30;
