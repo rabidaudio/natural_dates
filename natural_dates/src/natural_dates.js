@@ -41,18 +41,30 @@ Date = (function(D){
         else if(diff<0 && diff>-7)  return "Last "+day_to_string(d.getDay());
         else if(diff>0 && diff<7)   return "This "+day_to_string(d.getDay());
         else if(diff>=7 && diff<14) return "Next "+day_to_string(d.getDay())+
-                                                " the "+module.number_endings(d.getDate());
+                                                " the "+number_endings(d.getDate());
         else                        return month_to_string(d.getMonth())+" "+
-                                                module.number_endings(d.getDate());
+                                                number_endings(d.getDate())
+                                                + ( within_days(d, -365/2, 365/2)
+                                                    ? ""
+                                                    :" "+d.getFullYear());
     };
 
+
+
     //HELPERS
+    var within_days = function(d, start, finish){
+        var today = Date.natural.referenceDate || new Date();
+        var one_day = 1000*60*60*24;
+        var diff = Math.ceil((d.getTime() - today.getTime())/one_day);
+        return (diff >= start && diff <= finish);
+    }
+
     var number_endings = function(n){
         if(n>10 && n<14) return n+"th"; //special case 11th - 13th
         switch(n%10){
-            case 1:  return n+"st"; break;
-            case 2:  return n+"nd"; break;
-            case 3:  return n+"rd"; break;
+            case 1:  return n+"st";
+            case 2:  return n+"nd";
+            case 3:  return n+"rd";
             default: return n+"th";
         }
     };
