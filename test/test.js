@@ -147,6 +147,11 @@ describe('Date', function(){
         var midnight = new Date(2014, 11, 31, 23, 54);
         midnight.getNaturalTime({roundTime: 5}).should.eql('5 minutes to midnight');
       });
+
+      it('should allow rounding to whole hours', function(){
+        var t = new Date(2015, 1, 1, 11, 45);
+        t.getNaturalTime({roundTime: 60}).should.eql('noon');
+      });
     });
   });
 

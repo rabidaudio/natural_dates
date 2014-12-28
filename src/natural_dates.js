@@ -5,7 +5,7 @@
     //configure
     D.natural = {
         referenceDate: null,
-        roundTime: 0,
+        roundTime: null,
     };
 
     var module = D.prototype;
@@ -129,12 +129,14 @@
     var round_time = function(date, opts){
         var round;
         var d = date;
-        if(opts && opts.roundTime){
-            round = opts.roundTime % 60;
-        }else{
-            round = (D.natural.roundTime || 0) % 60;
+        if(opts && opts.roundTime != undefined){
+            round = opts.roundTime % 30;
+        }else if(D.natural.roundTime){
+            round = D.natural.roundTime % 30;
         }
-        if(round > 0)
+        if(round === 0)
+            round=60; //special case for rounding to nearest hour
+        if(round)
             d.setMinutes(Math.round(d.getMinutes()/round)*round);
         return d;
     };
