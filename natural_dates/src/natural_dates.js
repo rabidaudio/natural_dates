@@ -59,6 +59,13 @@ Date = (function(D){
     };
 
     module.toNaturalString = function(opts){
+        var d = this;
+        var refDate;
+        if(opts && opts.refDate)
+            refDate = opts.refDate;
+
+        if(within_days(d,0,0, refDate))
+            //do minutes ago/from now
         return this.getNaturalDate(opts) + " at " + this.getNaturalTime(opts);
     };
 

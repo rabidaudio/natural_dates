@@ -70,6 +70,21 @@ describe('Date', function(){
   // });
 
   describe('#naturalTime()', function(){
-
+    it('should handle am', function(){
+        var morning = new Date(2015, 0, 1, 3, 0);
+        morning.getNaturalTime().should.eql('3 am');
+    });
+    it('should handle pm', function(){
+        var afternoon = new Date(2015, 0, 1, 15, 0);
+        afternoon.getNaturalTime().should.eql('3 pm');
+    });
+    it('should handle noon', function(){
+        var noon = new Date(2015, 0, 1, 12, 0);
+        noon.getNaturalTime().should.eql('noon');
+    });
+    it('should handle midnight', function(){
+        var midnight = new Date(2015, 0, 1, 0, 0);
+        midnight.getNaturalTime().should.eql('midnight');
+    });
   });
 })
