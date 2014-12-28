@@ -10,7 +10,7 @@ Date = (function(D){
 
     var module = D.prototype;
 
-    module.naturalTime = function(opts){
+    module.getNaturalTime = function(opts){
         var hours = this.getHours();
         var minutes = this.getMinutes();
         var ampm = "am";
@@ -30,20 +30,24 @@ Date = (function(D){
         return hours+( minutes != 0 ? ":"+(minutes<10?"0":"")+minutes : "" )+" "+ampm;
     }
 
-    module.naturalDate = function(opts){
+    module.getNaturalDate = function(opts){
         var d = this;
-        if(within_days(d, -1, -1))
+        var refDate;
+        if(opts && opts.refDate)
+            refDate = opts.refDate;
+
+        if(within_days(d, -1, -1, refDate))
             return "Yesterday";
-        if(within_days(d,0,0))
+        if(within_days(d,0,0, refDate))
             return "Today";
-        if(within_days(d,1,1))
+        if(within_days(d,1,1, refDate))
             return "Tomorrow";
 
-        if(within_days(d,-7,0))
+        if(within_days(d,-7,0, refDate))
             return "Last "+day_to_string(d.getDay());
-        if(within_days(d,0,7))
+        if(within_days(d,0,7, refDate))
             return "This "+day_to_string(d.getDay());
-        if(within_days(d,7,14))
+        if(within_days(d,7,14, refDate))
             return "Next "+day_to_string(d.getDay())+" the "+number_endings(d.getDate());
 
         var month = month_to_string(d.getMonth());
@@ -54,11 +58,15 @@ Date = (function(D){
         return result.join(" ");
     };
 
+    module.toNaturalString = function(opts){
+        return this.getNaturalDate(opts) + " at " + this.getNaturalTime(opts);
+    };
+
 
 
     //HELPERS
-    var within_days = function(d, start, finish){
-        var today = Date.natural.referenceDate || new Date();
+    var within_days = function(d, start, finish, refDate){
+        var today = refDate || Date.natural.referenceDate || new Date();
         var one_day = 1000*60*60*24;
         var diff = Math.ceil((d.getTime() - today.getTime())/one_day);
         return (diff >= start && diff <= finish);
