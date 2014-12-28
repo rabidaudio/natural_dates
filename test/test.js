@@ -110,6 +110,10 @@ describe('Date', function(){
         var midnight = new Date(2015, 0, 1, 0, 2);
         midnight.getNaturalTime().should.eql('2 minutes past midnight');
       });
+      it('should handle 1 am', function(){
+        var oneam = new Date(2015, 0, 1, 1, 17);
+        oneam.getNaturalTime().should.eql('1:17 am');
+      });
     });
 
     describe('rounding', function(){

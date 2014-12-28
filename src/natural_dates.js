@@ -28,7 +28,7 @@
         var day_minutes = hours*60+minutes;
 
         var noon     = (day_minutes >= (11.5*60) && day_minutes <= (12.5*60));
-        var midnight = (day_minutes >= (23.5*60) || day_minutes <= (1.5 *60));
+        var midnight = (day_minutes >= (23.5*60) || day_minutes <= (0.5 *60));
 
         if(noon || midnight){
             var result = [];
