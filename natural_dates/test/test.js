@@ -87,13 +87,13 @@ describe('Date', function(){
     });
 
     describe('exact times with minutes', function(){
-      it('should handle am', function(){
+      it('should handle minutes', function(){
         var morning = new Date(2015, 0, 1, 3, 41);
         morning.getNaturalTime().should.eql('3:41 am');
       });
-      it('should handle pm', function(){
-        var afternoon = new Date(2015, 0, 1, 15, 41);
-        afternoon.getNaturalTime().should.eql('3:41 pm');
+      it('should have two-digit minutes', function(){
+        var afternoon = new Date(2015, 0, 1, 15, 05);
+        afternoon.getNaturalTime().should.eql('3:05 pm');
       });
       it('should handle before noon', function(){
         var noon = new Date(2015, 0, 1, 11, 55);

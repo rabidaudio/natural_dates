@@ -32,21 +32,18 @@ Date = (function(D){
 
         if(noon || midnight){
             var result = [];
-            if(minutes != 0){
-                if(minutes>30){
-                    result.push(pluralize(60-minutes, "minute"));
-                    result.push(noon ? "before" : "to");
-                }else{
-                    result.push(pluralize(minutes, "minute"));
-                    result.push(noon ? "after" : "past");
-                }
+            if(minutes>30 && minutes != 0){
+                result.push(pluralize(60-minutes, "minute"));
+                result.push(noon ? "before" : "to");
+            }else if(minutes != 0){
+                result.push(pluralize(minutes, "minute"));
+                result.push(noon ? "after" : "past");
             }
             result.push(noon ? "noon" : "midnight");
             return result.join(" ");
         }
 
         hours = (hours % 12)+"";
-
         if(minutes==0)
             return hours+" "+ampm;
 
@@ -91,9 +88,9 @@ Date = (function(D){
         if(opts && opts.referenceDate)
             refDate = opts.referenceDate;
 
-        if(within_days(d,0,0, refDate))
-            //do minutes ago/from now
-        return this.getNaturalDate(opts) + " at " + this.getNaturalTime(opts);
+        if(!within_days(d,0,0, refDate))
+            return this.getNaturalDate(opts) + " at " + this.getNaturalTime(opts);
+        
     };
 
 
