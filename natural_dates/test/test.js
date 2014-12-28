@@ -159,7 +159,7 @@ describe('Date', function(){
 
     describe("past", function(){
       it("should handle short times", function(){
-        var short = new Date(2015, 0, 1, 1, 29, 00);
+        var short = new Date(2015, 0, 1, 1, 28, 55);
         short.toRelativeString().should.eql("1 minute ago");
       });
       it("should handle longer times", function(){
@@ -190,7 +190,7 @@ describe('Date', function(){
 
     describe("future", function(){
       it("should handle short times", function(){
-        var short = new Date(2015, 0, 1, 1, 31, 00);
+        var short = new Date(2015, 0, 1, 1, 31, 01);
         short.toRelativeString().should.eql("1 minute from now");
       });
       it("should handle longer times", function(){

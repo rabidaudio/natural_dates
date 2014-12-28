@@ -1,4 +1,4 @@
-Date = (function(D){
+(function(D){
 /*  Appends some useful natural language methods to Date. American system only.
     Written by Charles Knight, charles@rabidaudio.com - 2014
 */
@@ -10,10 +10,14 @@ Date = (function(D){
 
     var module = D.prototype;
 
-    var ONE_MIN = 1000*60;
+    var ONE_SEC  = 1000;
+    var ONE_MIN  = ONE_SEC*60;
     var ONE_HOUR = ONE_MIN*60;
-    var ONE_DAY = ONE_HOUR*24;
+    var ONE_DAY  = ONE_HOUR*24;
 
+    /**
+    *   Such as '1 pm', '3:16 am', 'noon', or '5 minutes to midnight'
+    */
     module.getNaturalTime = function(opts){
         var d = round_time(this, opts);
         var hours = d.getHours();
@@ -23,8 +27,8 @@ Date = (function(D){
 
         var day_minutes = hours*60+minutes;
 
-        var noon = (day_minutes >= (11.5*60) && day_minutes <= (12.5*60));
-        var midnight = (day_minutes >= (23.5*60) || day_minutes <= (1.5*60));
+        var noon     = (day_minutes >= (11.5*60) && day_minutes <= (12.5*60));
+        var midnight = (day_minutes >= (23.5*60) || day_minutes <= (1.5 *60));
 
         if(noon || midnight){
             var result = [];
@@ -50,40 +54,48 @@ Date = (function(D){
         return hours+":"+minutes+" "+ampm;
     }
 
+    /**
+    *   Such as 'Tomorrow', 'Last Tuesday', 'Next Thursday the 11th', 'October 2nd'
+    */
     module.getNaturalDate = function(opts){
         var d = this;
         var refDate = getReferenceDate(opts);
         var past = ((d-refDate) < 0);
+        var diff_days = Math.abs(Math.round((d - refDate)/ONE_DAY));
 
-        if(within_days(d, 0, refDate))
+        if(diff_days <= 0)
             return "Today";
-        if(within_days(d, 1, refDate))
+        if(diff_days <= 1)
             return (past ? "Yesterday" : "Tomorrow");
 
-        if(within_days(d, 7, refDate))
+        if(diff_days < 7)
             return ( past ? "Last" : "This")+" "+day_to_string(d.getDay());
-        if(within_days(d, 14, refDate) && !past)
+        if(diff_days < 14 && !past)
             return "Next "+day_to_string(d.getDay())+" the "+number_endings(d.getDate());
 
         var month = month_to_string(d.getMonth());
         var day = number_endings(d.getDate());
         var result = [month, day];
-        if(!within_days(d, 365, refDate))
+        if(diff_days > 365)
             result.push(d.getFullYear());
         return result.join(" ");
     };
 
+    /**
+    *   Such as 'now', '5 minutes ago', '6 weeks from now'
+    */
     module.toRelativeString = function(opts){
         var d = this;
         var refDate = getReferenceDate(opts);
         var past = ((d-refDate) < 0);
-        var diff_min = Math.abs(Math.ceil((d - refDate)/ONE_MIN));
-        var diff_hours = Math.abs(Math.ceil((d - refDate)/ONE_HOUR));
-        var diff_days = Math.abs(Math.ceil((d - refDate)/ONE_DAY));
+        var diff_sec = Math.abs(Math.round((d - refDate)/ONE_SEC))
+        var diff_min = Math.abs(Math.round((d - refDate)/ONE_MIN));
+        var diff_hours = Math.abs(Math.round((d - refDate)/ONE_HOUR));
+        var diff_days = Math.abs(Math.round((d - refDate)/ONE_DAY));
 
         var suffix = " " + (past ? "ago" : "from now");
 
-        if(diff_min < 1)    //now
+        if(diff_sec < 60)    //now
             return "now";
         if(diff_min < 5)    //5 minutes
             return pluralize(diff_min, "minute") + suffix;
@@ -100,15 +112,18 @@ Date = (function(D){
         return pluralize(Math.round(diff_days/365), "year") + suffix; //12 years
     };
 
+    /**
+    *   Such as 'Yesterday at 1pm' or 'Next Wednesday at noon'
+    */
     module.toNaturalString = function(opts){
         return this.getNaturalDate(opts)+" at "+this.getNaturalTime(opts);
     };
 
 
     //HELPERS
-
     var pluralize = function(num, word){
-        return num + " " +word+(num==1 ? "" : "s");
+        // "12 cabbages" or "-1 carrot"
+        return num + " " +word+(Math.abs(num)==1 ? "" : "s");
     }
 
     var round_time = function(date, opts){
@@ -127,17 +142,6 @@ Date = (function(D){
         if(opts && opts.referenceDate)
             return opts.referenceDate;
         return D.natural.referenceDate || new Date();
-    }
-
-    var within_days = function(d, n, refDate){
-        var one_day = 1000*60*60*24;
-        var diff = Math.abs(Math.ceil((d.getTime() - refDate.getTime())/one_day));
-        return (diff <= n);
-    }
-    var within_minutes = function(d, n, refDate){
-        var one_min = 1000*60;
-        var diff = Math.abs(Math.ceil((d - refDate)/one_min));
-        return (diff <= n);
     }
 
     var number_endings = function(n){
@@ -178,5 +182,5 @@ Date = (function(D){
             "December"
         ][m];
     };
-    return D;
+
 }(Date));
