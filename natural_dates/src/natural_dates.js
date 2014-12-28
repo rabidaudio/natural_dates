@@ -32,21 +32,26 @@ Date = (function(D){
 
     module.naturalDate = function(opts){
         var d = this;
-        var today = Date.natural.referenceDate || new Date();
-        var one_day = 1000*60*60*24;
-        var diff = Math.ceil((d.getTime() - today.getTime())/one_day);
-        if(diff==-1)                return "Yesterday";
-        else if(diff==0)            return "Today";
-        else if(diff==1)            return "Tomorrow";
-        else if(diff<0 && diff>-7)  return "Last "+day_to_string(d.getDay());
-        else if(diff>0 && diff<7)   return "This "+day_to_string(d.getDay());
-        else if(diff>=7 && diff<14) return "Next "+day_to_string(d.getDay())+
-                                                " the "+number_endings(d.getDate());
-        else                        return month_to_string(d.getMonth())+" "+
-                                                number_endings(d.getDate())
-                                                + ( within_days(d, -365/2, 365/2)
-                                                    ? ""
-                                                    :" "+d.getFullYear());
+        if(within_days(d, -1, -1))
+            return "Yesterday";
+        if(within_days(d,0,0))
+            return "Today";
+        if(within_days(d,1,1))
+            return "Tomorrow";
+
+        if(within_days(d,-7,0))
+            return "Last "+day_to_string(d.getDay());
+        if(within_days(d,0,7))
+            return "This "+day_to_string(d.getDay());
+        if(within_days(d,7,14))
+            return "Next "+day_to_string(d.getDay())+" the "+number_endings(d.getDate());
+
+        var month = month_to_string(d.getMonth());
+        var day = number_endings(d.getDate());
+        var result = [month, day];
+        if(!within_days(d, -365/2, 365/2))
+            result.push(d.getFullYear());
+        return result.join(" ");
     };
 
 
