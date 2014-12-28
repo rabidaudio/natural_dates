@@ -73,7 +73,7 @@ Date = (function(D){
         return result.join(" ");
     };
 
-    module.toNaturalString = function(opts){
+    module.toRelativeString = function(opts){
         var d = this;
         var refDate = getReferenceDate(opts);
         var past = ((d-refDate) < 0);
@@ -100,7 +100,7 @@ Date = (function(D){
         return pluralize(Math.round(diff_days/365), "year") + suffix; //12 years
     };
 
-    module.toRelativeString = function(opts){
+    module.toNaturalString = function(opts){
         return this.getNaturalDate(opts)+" at "+this.getNaturalTime(opts);
     };
 

@@ -151,40 +151,40 @@ describe('Date', function(){
     });
   });
 
-  describe('#toNaturalString()', function(){
+  describe('#toRelativeString()', function(){
     it("should handle now", function(){
       var now = new Date(2015, 0, 1, 1, 29, 15);
-      now.toNaturalString().should.eql("now");
+      now.toRelativeString().should.eql("now");
     });
 
     describe("past", function(){
       it("should handle short times", function(){
         var short = new Date(2015, 0, 1, 1, 29, 00);
-        short.toNaturalString().should.eql("1 minute ago");
+        short.toRelativeString().should.eql("1 minute ago");
       });
       it("should handle longer times", function(){
         var long = new Date(2015, 0, 1, 1, 2);
-        long.toNaturalString().should.eql("30 minutes ago");
+        long.toRelativeString().should.eql("30 minutes ago");
       });
       it('should handle hours', function(){
         var hours = new Date(2014, 11, 31, 13, 0);
-        hours.toNaturalString().should.eql("12 hours ago");
+        hours.toRelativeString().should.eql("12 hours ago");
       });
       it("should handle days", function(){
         var days = new Date(2014, 11, 31, 1, 0);
-        days.toNaturalString().should.eql("1 day ago");
+        days.toRelativeString().should.eql("1 day ago");
       });
       it("should handle weeks", function(){
         var weeks = new Date(2014, 11, 16, 12, 0);
-        weeks.toNaturalString().should.eql("2 weeks ago");
+        weeks.toRelativeString().should.eql("2 weeks ago");
       });
       it("should handle months", function(){
         var months = new Date(2014, 4, 31, 12, 0);
-        months.toNaturalString().should.eql("7 months ago");
+        months.toRelativeString().should.eql("7 months ago");
       });
       it('should handle years', function(){
         var years = new Date(2012, 11, 31, 12, 0);
-        years.toNaturalString().should.eql("2 years ago");
+        years.toRelativeString().should.eql("2 years ago");
       })
     });
   });
