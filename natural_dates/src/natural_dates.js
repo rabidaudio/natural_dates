@@ -32,10 +32,10 @@
 
         if(noon || midnight){
             var result = [];
-            if(minutes>30 && minutes != 0){
+            if(minutes>30 && minutes !== 0){
                 result.push(pluralize(60-minutes, "minute"));
                 result.push(noon ? "before" : "to");
-            }else if(minutes != 0){
+            }else if(minutes !== 0){
                 result.push(pluralize(minutes, "minute"));
                 result.push(noon ? "after" : "past");
             }
@@ -44,7 +44,7 @@
         }
 
         hours = (hours % 12)+"";
-        if(minutes==0)
+        if(minutes === 0)
             return hours+" "+ampm;
 
         minutes = minutes+"";
@@ -52,7 +52,7 @@
             minutes="0"+minutes;
 
         return hours+":"+minutes+" "+ampm;
-    }
+    };
 
     /**
     *   Such as 'Tomorrow', 'Last Tuesday', 'Next Thursday the 11th', 'October 2nd'
@@ -88,7 +88,7 @@
         var d = this;
         var refDate = getReferenceDate(opts);
         var past = ((d-refDate) < 0);
-        var diff_sec = Math.abs(Math.round((d - refDate)/ONE_SEC))
+        var diff_sec = Math.abs(Math.round((d - refDate)/ONE_SEC));
         var diff_min = Math.abs(Math.round((d - refDate)/ONE_MIN));
         var diff_hours = Math.abs(Math.round((d - refDate)/ONE_HOUR));
         var diff_days = Math.abs(Math.round((d - refDate)/ONE_DAY));
@@ -124,7 +124,7 @@
     var pluralize = function(num, word){
         // "12 cabbages" or "-1 carrot"
         return num + " " +word+(Math.abs(num)==1 ? "" : "s");
-    }
+    };
 
     var round_time = function(date, opts){
         var round;
@@ -137,12 +137,12 @@
         if(round > 0)
             d.setMinutes(Math.round(d.getMinutes()/round)*round);
         return d;
-    }
+    };
     var getReferenceDate = function(opts){
         if(opts && opts.referenceDate)
             return opts.referenceDate;
         return D.natural.referenceDate || new Date();
-    }
+    };
 
     var number_endings = function(n){
         if((n%100)>10 && (n%100)<14) return n+"th"; //special case 11th - 13th
