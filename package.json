@@ -27,6 +27,18 @@
     "grunt-mocha-test": "^0.12.4",
     "mocha": "^2.1.0"
   },
+  "testling": {
+    "harness": "mocha-bdd",
+    "files": "test/test.js",
+    "browsers": [
+      "ie/8..latest",
+      "chrome/latest",
+      "firefox/12..latest",
+      "safari/latest",
+      "iphone/6",
+      "android-browser/latest"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/rabidaudio/natural_dates.git"

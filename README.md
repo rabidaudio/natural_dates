@@ -1,3 +1,6 @@
+[![browser support](https://ci.testling.com/rabidaudio/natural_dates.png)
+](https://ci.testling.com/rabidaudio/natural_dates)
+
 This is a simple javascript library for getting Javascript date objects as strings in a more natural-language format.
 The minified version is right around 2kb.
 
