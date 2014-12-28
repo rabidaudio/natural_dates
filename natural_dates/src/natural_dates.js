@@ -89,7 +89,7 @@ Date = (function(D){
             return pluralize(diff_min, "minute") + suffix;
         if(diff_min < 60)   //55 minutes
             return pluralize(Math.round(diff_min/5)*5, "minute") + suffix;
-        if(diff_days < 1)   //23 hours
+        if(diff_hours < 23) //23 hours
             return pluralize(diff_hours, "hour") + suffix;
         if(diff_days < 14)  //13 days
             return pluralize(diff_days, "day") + suffix;

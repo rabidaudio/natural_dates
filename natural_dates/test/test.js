@@ -185,7 +185,38 @@ describe('Date', function(){
       it('should handle years', function(){
         var years = new Date(2012, 11, 31, 12, 0);
         years.toRelativeString().should.eql("2 years ago");
-      })
+      });
+    });
+
+    describe("future", function(){
+      it("should handle short times", function(){
+        var short = new Date(2015, 0, 1, 1, 31, 00);
+        short.toRelativeString().should.eql("1 minute from now");
+      });
+      it("should handle longer times", function(){
+        var long = new Date(2015, 0, 1, 2, 02);
+        long.toRelativeString().should.eql("30 minutes from now");
+      });
+      it('should handle hours', function(){
+        var hours = new Date(2015, 0, 1, 13, 15);
+        hours.toRelativeString().should.eql("12 hours from now");
+      });
+      it("should handle days", function(){
+        var days = new Date(2015, 0, 2);
+        days.toRelativeString().should.eql("1 day from now");
+      });
+      it("should handle weeks", function(){
+        var weeks = new Date(2015, 0, 16);
+        weeks.toRelativeString().should.eql("2 weeks from now");
+      });
+      it("should handle months", function(){
+        var months = new Date(2015, 7, 3);
+        months.toRelativeString().should.eql("7 months from now");
+      });
+      it('should handle years', function(){
+        var years = new Date(2017, 2, 1);
+        years.toRelativeString().should.eql("2 years from now");
+      });
     });
   });
 });
